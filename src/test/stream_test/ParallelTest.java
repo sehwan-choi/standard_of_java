@@ -13,25 +13,31 @@ public class ParallelTest {
 
         TimeChecker timeChecker = new TimeChecker();
         timeChecker.start();
-        List<Integer> collect = new Random().ints(0, 10000000).limit(200000000).boxed().collect(Collectors.toList());
+        List<Integer> collect = new Random().ints(0, 10000000).limit(100000000).boxed().collect(Collectors.toList());
         timeChecker.end();
 
-        // 스트림 병렬 처리
+        // IntStream 스트림 병렬 처리
         timeChecker.start();
-        int asInt = collect.stream().mapToInt(x -> x).parallel().reduce((a, b) -> a + b).getAsInt();
+        int asInt = collect.stream().mapToInt(x -> x).parallel().reduce(Integer::sum).getAsInt();
         timeChecker.end();
-        System.out.println("asInt = " + asInt);
+        System.out.println("IntStream 병렬 처리 = " + asInt);
 
-        // 스트림 순차 처리
+        // IntStream 스트림 순차 처리
         timeChecker.start();
-        int asInt1 = collect.stream().mapToInt(x -> x).sequential().reduce((a, b) -> a + b).getAsInt();
+        int asInt1 = collect.stream().mapToInt(x -> x).sequential().reduce(Integer::sum).getAsInt();
         timeChecker.end();
-        System.out.println("asInt1 = " + asInt1);
+        System.out.println("IntStream 순차 처리 = " + asInt1);
 
-        // 스트림 boxing처리
+        // Stream<T> 병렬 처리
         timeChecker.start();
-        Integer integer = collect.stream().reduce((a, b) -> a + b).get();
+        Integer integer = collect.stream().parallel().reduce(Integer::sum).get();
         timeChecker.end();
-        System.out.println("integer = " + integer);
+        System.out.println("Stream<T> 병렬 처리 = " + integer);
+
+        // Stream<T>  순차 처리
+        timeChecker.start();
+        Integer integer2 = collect.stream().reduce(Integer::sum).get();
+        timeChecker.end();
+        System.out.println("Stream<T> 순차 처리 = " + integer2);
     }
 }

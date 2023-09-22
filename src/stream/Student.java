@@ -2,7 +2,7 @@ package stream;
 
 public class Student {
 
-    enum LEVEL {HIGH, MID, LOW}
+    public enum LEVEL {HIGH, MID, LOW}
 
     private String name;
     boolean male;
